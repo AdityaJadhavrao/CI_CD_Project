@@ -1,8 +1,9 @@
 pipeline {
     agent any
+
     tools {
-        maven 'MAVEN3'
-        jdk 'OracleJDK8'
+        maven "MAVEN3"
+        jdk "OracleJDK8"
     }
 
     environment {
@@ -21,6 +22,24 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn -s settings.xml -DskipTests install'
+            }
+            post {
+                success {
+                    echo "Now Archiving."
+                    archiveArtifacts artifacts: '*/.war'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Checkstyle Analysis') {
+            steps {
+                sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
     }
