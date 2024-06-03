@@ -12,7 +12,7 @@ pipeline {
         NEXUS_PASS = 'Aditya@1139*'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
-        NEXUSIP = '3.106.255.83'
+        NEXUSIP = '3.24.208.104'
         NEXUSPORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
@@ -81,7 +81,7 @@ pipeline {
                     groupId: 'QA',
                     version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
                     repository: "${RELEASE_REPO}",
-                    credentialsId: "${NEXUS_LOGIN}", // Added quotes around ${NEXUS_LOGIN}
+                    credentialsId: "${NEXUS_LOGIN}",
                     artifacts: [[
                         artifactId: 'vproapp',
                         classifier: '',
@@ -90,6 +90,17 @@ pipeline {
                     ]]
                 )
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Slack Notifications' 
+            slackSend(
+                channel: '#jenkinscicd',
+                color: COLOR_MAP[currentBuild.currentResult],
+                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+            )
         }
     }
 }
