@@ -11,6 +11,7 @@ pipeline {
     tools {
         maven "MAVEN3"
         jdk "OracleJDK8"
+        nodejs "NodeJS_14" // Ensure you have a NodeJS tool configured in Jenkins
     }
 
     environment {
@@ -19,7 +20,7 @@ pipeline {
         NEXUS_PASS = 'Aditya@1139*'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
-        NEXUSIP = '3.25.173.127'
+        NEXUSIP = '13.236.10.135'
         NEXUSPORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
@@ -107,6 +108,7 @@ pipeline {
                 channel: '#jenkinscicd',
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                tokenCredentialId: 'cgYvRsF2ry0Jy6gIKboxlkH5'
             )
         }
     }
