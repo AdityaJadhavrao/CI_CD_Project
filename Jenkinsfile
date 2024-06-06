@@ -11,7 +11,6 @@ pipeline {
     tools {
         maven "MAVEN3"
         jdk "OracleJDK8"
-        nodejs "NodeJS_14" // Ensure you have a NodeJS tool configured in Jenkins
     }
 
     environment {
