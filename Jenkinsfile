@@ -1,8 +1,9 @@
 def COLOR_MAP = [
-    'SUCCESS': 'good',
-    'FAILURE': 'danger',
-    'UNSTABLE': 'warning',
-    'ABORTED': '#CCCCCC'
+    'SUCCESS': '#00FF00',
+    'FAILURE': '#FF0000',
+    'ABORTED': '#FFFF00',
+    'NOT_BUILT': '#808080',
+    'UNSTABLE': '#FFA500'
 ]
 
 pipeline {
@@ -16,18 +17,18 @@ pipeline {
     environment {
         SNAP_REPO = 'vprofile-snapshot'
         NEXUS_USER = 'admin'
-        NEXUS_PASS = 'Aditya@1139*'
+        NEXUS_PASS = '%Tgbnji9'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
         NEXUSIP = '3.26.59.208'
         NEXUSPORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
-        NEXUS_LOGIN = 'nexuslogin'
+        NEXUS_LOGIN = 'NexusUser'
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
-        registryCredential = 'ecr:ap-southeast-2:awscreds'
-        appRegistry = '490135005964.dkr.ecr.ap-southeast-2.amazonaws.com/vprofileappimg'
-        vprofileRegistry = 'https://490135005964.dkr.ecr.ap-southeast-2.amazonaws.com'
+        registryCredential = 'jenkins'
+        appRegistry = 'http://490135005964.dkr.ecr.ap-southeast-2.amazonaws.com/vprofileappimg'
+        vprofileRegistry = "https://http://490135005964.dkr.ecr.ap-southeast-2.amazonaws"
     }
 
     stages {
@@ -38,7 +39,7 @@ pipeline {
             post {
                 success {
                     echo "Now Archiving."
-                    archiveArtifacts artifacts: '**/*.war'
+                    archiveArtifacts artifacts: '*/.war'
                 }
             }
         }
@@ -102,10 +103,10 @@ pipeline {
             }
         }
 
-        stage('Build App Image') {
+        stage('Build App image') {
             steps {
                 script {
-                    dockerImage = docker.build(appRegistry + ":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+                    dockerImage = docker.build( "${appRegistry}:$BUILD_NUMBER", "./Docker-files/app/multistage/")
                 }
             }
         }
@@ -113,7 +114,7 @@ pipeline {
         stage('Upload App Image') {
             steps {
                 script {
-                    docker.withRegistry(vprofileRegistry, registryCredential) {
+                    docker.withRegistry( vprofileRegistry, registryCredential ) {
                         dockerImage.push("$BUILD_NUMBER")
                         dockerImage.push('latest')
                     }
@@ -125,11 +126,9 @@ pipeline {
     post {
         always {
             echo 'Slack Notifications'
-            slackSend(
-                channel: '#jenkinscicd',
-                color: COLOR_MAP[currentBuild.currentResult],
-                message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-            )
+            slackSend channel: '#jenkins-cicd',
+            color: COLOR_MAP[currentBuild.currentResult],
+            message: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
     }
 }
