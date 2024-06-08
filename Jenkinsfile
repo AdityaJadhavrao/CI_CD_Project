@@ -27,8 +27,6 @@ pipeline {
         SONARSERVER = 'sonarserver'
         SONARSCANNER = 'sonarscanner'
         registryCredential = 'jenkins'
-        appRegistry = 'http://490135005964.dkr.ecr.ap-southeast-2.amazonaws.com/vprofileappimg'
-        vprofileRegistry = "https://http://490135005964.dkr.ecr.ap-southeast-2.amazonaws"
     }
 
     stages {
@@ -100,25 +98,6 @@ pipeline {
                         type: 'war'
                     ]]
                 )
-            }
-        }
-
-        stage('Build App image') {
-            steps {
-                script {
-                    dockerImage = docker.build( "${appRegistry}:$BUILD_NUMBER", "./Docker-files/app/multistage/")
-                }
-            }
-        }
-
-        stage('Upload App Image') {
-            steps {
-                script {
-                    docker.withRegistry( vprofileRegistry, registryCredential ) {
-                        dockerImage.push("$BUILD_NUMBER")
-                        dockerImage.push('latest')
-                    }
-                }
             }
         }
     }
