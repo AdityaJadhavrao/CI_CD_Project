@@ -17,14 +17,14 @@ pipeline {
     environment {
         SNAP_REPO = 'vprofile-snapshot'
         NEXUS_USER = 'admin'
-        NEXUS_PASS = '%Tgbnji9'
+        NEXUS_PASS = 'Aditya@1139*'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
         NEXUSIP = '3.26.46.170'
         NEXUSPORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
-        NEXUS_LOGIN = 'NexusUser'
-        SONARSERVER = 'sonarserver'
+        NEXUS_LOGIN = 'nexuslogin'
+        SONARSERVER = 'sonar-token'
         SONARSCANNER = 'sonarscanner'
         registryCredential = 'jenkins'
     }
