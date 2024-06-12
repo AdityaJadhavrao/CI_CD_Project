@@ -1,6 +1,6 @@
 def COLOR_MAP = [
-    'SUCCESS': '#00FF00',
-    'FAILURE': '#FF0000',
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
     'ABORTED': '#FFFF00',
     'NOT_BUILT': '#808080',
     'UNSTABLE': '#FFA500'
@@ -29,6 +29,8 @@ pipeline {
         registryCredential = 'ecr:ap-southeast-2:AKIAXEHSSVMGAVQ4UQ2E'
         appRegistry = '490135005964.dkr.ecr.ap-southeast-2.amazonaws.com/vprofileappimg'
         vprofileRegistry = "https://490135005964.dkr.ecr.ap-southeast-2.amazonaws.com"
+        cluster = 'vproappstagetask'
+        service = 'vproappstagesvc'
     }
 
     stages {
@@ -121,6 +123,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to ECS Cluster') {
+            steps {
+                withAWS(credentials: 'AKIAXEHSSVMGAVQ4UQ2E', region: 'ap-southeast-2') {
+                    sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+                }
+            }
+        }
     }
 
     post {
@@ -128,7 +138,7 @@ pipeline {
             echo 'Slack Notifications'
             slackSend channel: '#jenkins-cicd',
                       color: COLOR_MAP[currentBuild.currentResult],
-                      message: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                      message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
         }
     }
 }
