@@ -126,8 +126,19 @@ pipeline {
 
         stage('Deploy to ECS Cluster') {
             steps {
-                withAWS(credentials: 'AKIAXEHSSVMGAVQ4UQ2E', region: 'ap-southeast-2') {
-                    sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+                script {
+                    // Check AWS CLI installation and version
+                    sh 'aws --version'
+                    
+                    // Debug PATH
+                    sh 'echo $PATH'
+                    
+                    // Check AWS CLI credentials
+                    sh 'aws sts get-caller-identity'
+
+                    withAWS(credentials: 'awscreds', region: 'ap-southeast-2') {
+                        sh 'aws ecs update-service --cluster ${cluster} --service ${service} --force-new-deployment'
+                    }
                 }
             }
         }
