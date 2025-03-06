@@ -55,6 +55,7 @@ pipeline {
                 sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
-   }
-}
+    } // <-- Closing brace for stages
+
+} // <-- Closing brace for pipeline
 
