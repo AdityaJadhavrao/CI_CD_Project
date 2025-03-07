@@ -20,7 +20,7 @@ pipeline {
         NEXUS_PASS = '*'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
-        NEXUSIP = '34.204.73.255'// -------> Change the IP 
+        NEXUSIP = '34.204.73.255'
         NEXUSPORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
@@ -55,7 +55,7 @@ pipeline {
                 sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
-    } // <-- Closing brace for stages
+    } 
 
-} // <-- Closing brace for pipeline
+} 
 
