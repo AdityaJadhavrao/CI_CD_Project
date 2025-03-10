@@ -15,8 +15,6 @@ pipeline {
     }
 
     environment {
-	SONARSERVER = 'sonarserver'
-        SONARSCANNER = 'sonarscanner'
         SNAP_REPO = 'vprofile-snapshot'
         NEXUS_USER = 'admin'
         NEXUS_PASS = 'Aditya@1139*'
