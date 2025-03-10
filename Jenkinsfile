@@ -17,10 +17,10 @@ pipeline {
     environment {
         SNAP_REPO = 'vprofile-snapshot'
         NEXUS_USER = 'admin'
-        NEXUS_PASS = '*'
+        NEXUS_PASS = 'Aditya@1139*'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
-        NEXUSIP = '34.204.73.255'
+        NEXUSIP = '98.82.168.50'
         NEXUSPORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
@@ -55,6 +55,7 @@ pipeline {
                 sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
-    } 
+    } // <-- Closing brace for stages
 
-} 
+} // <-- Closing brace for pipeline
+
