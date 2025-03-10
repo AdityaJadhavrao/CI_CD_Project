@@ -11,7 +11,7 @@ pipeline {
 
     tools {
         maven "MAVEN3"
-        jdk "OracleJDK8"
+        jdk "OracleJDK17"
     }
 
     environment {
@@ -56,24 +56,23 @@ pipeline {
             }
         }
 	stage('CODE ANALYSIS with SONARQUBE') {
-            environment {
-                scannerHome = tool "${SONARSCANNER}"
-            }
-            steps {
-                withSonarQubeEnv("${SONARSERVER}") {
-                    sh '''${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=vprofile \
-                    -Dsonar.projectName=vprofile-repo \
-                    -Dsonar.projectVersion=1.0 \
-                    -Dsonar.sources=src/ \
-                    -Dsonar.java.binaries=target \
-                    -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                    -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                    -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
-                }
+           environment {
+               scannerHome = tool "${SONARSCANNER}"
+           }
+           steps {
+               withEnv(["JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64", "PATH+JAVA=${JAVA_HOME}/bin"]) {
+                   withSonarQubeEnv("${SONARSERVER}") {
+                       sh '''${scannerHome}/bin/sonar-scanner \
+                       -Dsonar.projectKey=vprofile \
+                       -Dsonar.projectName=vprofile-repo \
+                       -Dsonar.projectVersion=1.0 \
+                       -Dsonar.sources=src/ \
+                       -Dsonar.java.binaries=target \
+                       -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                       -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                       -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
             }
         }
-    } // <-- Closing brace for stages
-
-} // <-- Closing brace for pipeline
+    }
+}
 
