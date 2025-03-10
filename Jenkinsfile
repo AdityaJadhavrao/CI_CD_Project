@@ -15,6 +15,8 @@ pipeline {
     }
 
     environment {
+	JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
+	PATH = "${JAVA_HOME}/bin:${PATH}"
         SNAP_REPO = 'vprofile-snapshot'
         NEXUS_USER = 'admin'
         NEXUS_PASS = 'Aditya@1139*'
