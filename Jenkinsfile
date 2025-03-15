@@ -15,14 +15,12 @@ pipeline {
     }
 
     environment {
-	JAVA_HOME = "/usr/lib/jvm/java-17-openjdk-amd64"
-	PATH = "${JAVA_HOME}/bin:${PATH}"
         SNAP_REPO = 'vprofile-snapshot'
         NEXUS_USER = 'admin'
         NEXUS_PASS = 'Aditya@1139*'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
-        NEXUSIP = '98.82.168.50'
+        NEXUSIP = '54.167.254.23'
         NEXUSPORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'nexuslogin'
@@ -57,26 +55,7 @@ pipeline {
                 sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
-	stage('CODE ANALYSIS with SONARQUBE') {
-           environment {
-               scannerHome = tool "${SONARSCANNER}"
-           }
-           steps {
-               withEnv(["JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64", "PATH+JAVA=${JAVA_HOME}/bin"]) {
-                   withSonarQubeEnv("${SONARSERVER}") {
-                       sh '''${scannerHome}/bin/sonar-scanner \
-                       -Dsonar.projectKey=vprofile \
-                       -Dsonar.projectName=vprofile-repo \
-                       -Dsonar.projectVersion=1.0 \
-                       -Dsonar.sources=src/ \
-                       -Dsonar.java.binaries=target \
-                       -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                       -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                       -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
-                }
-            }
-        }
-     }
-  }
-}
+    } // <-- Closing brace for stages
+
+} // <-- Closing brace for pipeline
 
